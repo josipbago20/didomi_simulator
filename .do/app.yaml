@@ -20,7 +20,7 @@ services:
       - key: DIDOMI_SIM_KEYS
         scope: RUN_TIME
         type: SECRET
-        value: 'REPLACE_ME [{"key":"...","secret":"...","organization_id":"demo-org"}]'
+        value: REPLACE_ME_key:REPLACE_ME_secret:demo-org
       - key: DIDOMI_SIM_JWT_SECRET
         scope: RUN_TIME
         type: SECRET

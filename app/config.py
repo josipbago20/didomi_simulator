@@ -48,13 +48,26 @@ def _date(value: str) -> datetime:
     return parsed
 
 
+def parse_keys(value: str) -> tuple[ApiKey, ...]:
+    """JSON list of {key, secret, organization_id}, or the brace-free form
+    `key:secret:organization_id[,key:secret:organization_id...]` for env editors that reject braces."""
+    value = value.strip()
+    if value.startswith("["):
+        return tuple(ApiKey(k["key"], k["secret"], k["organization_id"]) for k in json.loads(value))
+    keys = []
+    for entry in filter(None, (e.strip() for e in value.split(","))):
+        parts = entry.split(":")
+        if len(parts) != 3 or not all(parts):
+            raise ValueError("DIDOMI_SIM_KEYS entries must be key:secret:organization_id")
+        keys.append(ApiKey(*parts))
+    return tuple(keys)
+
+
 def load_settings() -> Settings:
     env = os.environ
     kwargs: dict = {}
     if env.get("DIDOMI_SIM_KEYS"):
-        kwargs["keys"] = tuple(
-            ApiKey(k["key"], k["secret"], k["organization_id"]) for k in json.loads(env["DIDOMI_SIM_KEYS"])
-        )
+        kwargs["keys"] = parse_keys(env["DIDOMI_SIM_KEYS"])
     for name, attr, cast in [
         ("DIDOMI_SIM_JWT_SECRET", "jwt_secret", str),
         ("DIDOMI_SIM_SEED", "seed", str),

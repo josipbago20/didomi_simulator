@@ -50,3 +50,11 @@ def test_other_org_403(client, auth):
 def test_missing_organization_id_400(client, auth):
     r = client.get("/v1/consents/users", headers=auth)
     assert r.status_code == 400 and "organization_id" in r.json()["errors"]
+
+
+def test_keys_env_formats():
+    from app.config import ApiKey, parse_keys
+    expected = (ApiKey("k1", "s1", "org-a"), ApiKey("k2", "s2", "org-b"))
+    assert parse_keys("k1:s1:org-a, k2:s2:org-b") == expected
+    assert parse_keys('[{"key":"k1","secret":"s1","organization_id":"org-a"},'
+                      '{"key":"k2","secret":"s2","organization_id":"org-b"}]') == expected

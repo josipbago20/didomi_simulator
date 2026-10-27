@@ -79,7 +79,7 @@ See [`.env.example`](.env.example).
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `DIDOMI_SIM_KEYS` | `[{"key":"demo-key","secret":"demo-secret","organization_id":"demo-org"}]` | JSON list of key/secret pairs, each bound to an organisation |
+| `DIDOMI_SIM_KEYS` | `demo-key:demo-secret:demo-org` | Key/secret pairs, each bound to an organisation: `key:secret:organization_id`, comma-separated (a JSON list also works, but DigitalOcean's env editor rejects braces) |
 | `DIDOMI_SIM_JWT_SECRET` | `change-me` | Token signing secret — **set it** in any shared deployment |
 | `DIDOMI_SIM_SEED` | `didomi-sim` | Changing it produces a different population |
 | `DIDOMI_SIM_USERS` | `3000` | Users per organisation |
@@ -133,7 +133,7 @@ instance, and paste the environment variables (see `.env.example`; mark `DIDOMI_
        envs:
          - key: DIDOMI_SIM_KEYS
            type: SECRET
-           value: '[{"key":"<key>","secret":"<secret>","organization_id":"demo-org"}]'
+           value: "<key>:<secret>:demo-org"
          - key: DIDOMI_SIM_JWT_SECRET
            type: SECRET
            value: "<32+ random bytes>"
