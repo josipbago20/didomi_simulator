@@ -1,0 +1,45 @@
+# DigitalOcean App Platform spec. Create with: doctl apps create --spec .do/app.yaml
+# Replace the two SECRET values first (or set them in the dashboard after creation).
+name: didomi-simulator
+region: fra
+services:
+  - name: api
+    github:
+      repo: josipbago20/didomi_simulator
+      branch: main
+      deploy_on_push: true
+    dockerfile_path: Dockerfile
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    health_check:
+      http_path: /health
+    routes:
+      - path: /
+    envs:
+      - key: DIDOMI_SIM_KEYS
+        scope: RUN_TIME
+        type: SECRET
+        value: 'REPLACE_ME [{"key":"...","secret":"...","organization_id":"demo-org"}]'
+      - key: DIDOMI_SIM_JWT_SECRET
+        scope: RUN_TIME
+        type: SECRET
+        value: REPLACE_ME
+      - key: DIDOMI_SIM_SEED
+        scope: RUN_TIME
+        value: didomi-sim
+      - key: DIDOMI_SIM_USERS
+        scope: RUN_TIME
+        value: "3000"
+      - key: DIDOMI_SIM_ANCHOR
+        scope: RUN_TIME
+        value: "2026-10-27"
+      - key: DIDOMI_SIM_INCIDENT_START
+        scope: RUN_TIME
+        value: "2026-10-13"
+      - key: DIDOMI_SIM_INCIDENT_DAYS
+        scope: RUN_TIME
+        value: "5"
+      - key: DIDOMI_SIM_INCIDENT_SOURCE
+        scope: RUN_TIME
+        value: sdk-mobile
